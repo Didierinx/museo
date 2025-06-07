@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Álbum Dibujitos</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <!-- Confetti container -->
+<div class="confetti-container"></div>
+
+<!-- Decoraciones laterales -->
+<img src="kuromi.png" class="decoracion izquierda" />
+<img src="mymelody.png" class="decoracion derecha" />
+  <div class="menu">
+    <button onclick="crearMural()">+ Nuevo Mural</button>
+    <button onclick="eliminarMural()">🗑️ Eliminar Mural</button>
+  </div>
+
+  <h1>Álbum Dibujitos</h1>
+  <div id="galeria-container"></div>
+
+  <div class="navegacion">
+    <button onclick="anteriorMural()">⬅️ Anterior</button>
+    <button onclick="siguienteMural()">Siguiente ➡️</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
