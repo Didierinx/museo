@@ -30,7 +30,6 @@ function cargarDatos() {
   mostrarMural();
 }
 
-// Mostrar mural actual
 function mostrarMural() {
   const contenedor = document.getElementById('mural-container');
   contenedor.innerHTML = '';
@@ -40,12 +39,15 @@ function mostrarMural() {
   mural.imagenes.forEach((imgObj, i) => {
     const contenedorImagen = document.createElement('div');
     contenedorImagen.className = 'imagen-contenedor';
+    contenedorImagen.style.position = 'relative';
 
+    // Imagen
     const imagen = document.createElement('img');
     imagen.src = imgObj.src || 'https://via.placeholder.com/150x150.png?text=+';
     imagen.className = 'imagen-mural';
     imagen.onclick = () => subirImagen(i);
 
+    // Texto
     const texto = document.createElement('input');
     texto.type = 'text';
     texto.value = imgObj.texto;
@@ -56,12 +58,23 @@ function mostrarMural() {
       guardarDatos();
     };
 
+    // Botón de eliminar ❌
+    const eliminarBtn = document.createElement('button');
+    eliminarBtn.innerHTML = '❌';
+    eliminarBtn.className = 'boton-eliminar';
+    eliminarBtn.onclick = (e) => {
+      e.stopPropagation(); // Evita que se dispare el evento de subir imagen
+      mural.imagenes[i] = { src: '', texto: '' };
+      mostrarMural();
+    };
+
+    contenedorImagen.appendChild(eliminarBtn);
     contenedorImagen.appendChild(imagen);
     contenedorImagen.appendChild(texto);
     contenedor.appendChild(contenedorImagen);
   });
 
-  guardarDatos(); // Guardar cada vez que se renderiza
+  guardarDatos();
 }
 
 // Subir imagen
