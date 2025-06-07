@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Álbum Dibujitos</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Confetti container -->
-<div class="confetti-container"></div>
 
-<!-- Decoraciones laterales -->
-<img src="kuromi.png" class="decoracion izquierda" />
-<img src="mymelody.png" class="decoracion derecha" />
-  <div class="menu">
-    <button onclick="crearMural()">+ Nuevo Mural</button>
-    <button onclick="eliminarMural()">🗑️ Eliminar Mural</button>
+  <!-- Lluvia de confeti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Decoración -->
+  <img src="decoracion1.png" class="decoracion decoracion-izquierda">
+  <img src="decoracion2.png" class="decoracion decoracion-derecha">
+
+  <!-- Título -->
+  <h1 class="titulo-principal">Álbum Dibujitos</h1>
+
+  <!-- Contenedor del mural -->
+  <div id="mural-container" class="mural-grid"></div>
+
+  <!-- Botones de navegación -->
+  <div class="controles">
+    <button id="btnNuevo">➕ Nuevo Mural</button>
+    <button id="btnEliminar">🗑️ Eliminar Mural</button>
+    <button id="btnAnterior">⬅️ Anterior</button>
+    <button id="btnSiguiente">Siguiente ➡️</button>
   </div>
 
-  <h1>Álbum Dibujitos</h1>
-  <div id="galeria-container"></div>
-
-  <div class="navegacion">
-    <button onclick="anteriorMural()">⬅️ Anterior</button>
-    <button onclick="siguienteMural()">Siguiente ➡️</button>
-  </div>
-
+  <!-- Script -->
   <script src="script.js"></script>
+  <script src="confetti.js"></script>
+
 </body>
 </html>
