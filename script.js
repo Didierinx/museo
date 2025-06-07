@@ -1,145 +1,125 @@
 let murales = [];
 let muralActual = 0;
 
+// Estructura vacía de un mural
+function crearMuralVacio() {
+  return {
+    imagenes: Array(6).fill().map(() => ({ src: '', texto: '' }))
+  };
+}
+
+// Guardar en localStorage
 function guardarDatos() {
-  const datos = murales.map(mural => {
-    const imagenes = Array.from(mural.querySelectorAll('.imagen-marco')).map(marco => ({
-      src: marco.querySelector('img').src,
-      texto: marco.querySelector('input').value
-    }));
-    return imagenes;
-  });
-  localStorage.setItem('muralesSanrio', JSON.stringify(datos));
+  localStorage.setItem('muralesSanrio', JSON.stringify(murales));
+  localStorage.setItem('indiceActual', muralActual);
 }
 
+// Cargar desde localStorage
 function cargarDatos() {
-  const datosGuardados = JSON.parse(localStorage.getItem('muralesSanrio')) || [];
-  datosGuardados.forEach(muralData => {
-    const mural = document.createElement('div');
-    mural.classList.add('mural');
-    muralData.forEach(({ src, texto }) => {
-      const marco = document.createElement('div');
-      marco.className = 'imagen-marco';
+  const dataGuardada = localStorage.getItem('muralesSanrio');
+  const indiceGuardado = localStorage.getItem('indiceActual');
 
-      const img = document.createElement('img');
-      img.src = src;
-      img.onclick = () => cambiarImagen(img);
-      img.oncontextmenu = e => {
-        e.preventDefault();
-        eliminarImagen(img);
-      };
-
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = texto;
-      input.oninput = guardarDatos;
-
-      marco.appendChild(img);
-      marco.appendChild(input);
-      mural.appendChild(marco);
-    });
-    document.getElementById('galeria-container').appendChild(mural);
-    murales.push(mural);
-  });
-
-  if (murales.length > 0) {
-    mostrarMural(0);
+  if (dataGuardada) {
+    murales = JSON.parse(dataGuardada);
+    muralActual = parseInt(indiceGuardado) || 0;
   } else {
-    crearMural();
+    murales = [crearMuralVacio()];
+    muralActual = 0;
   }
+
+  mostrarMural();
 }
 
-function crearMural() {
-  const mural = document.createElement('div');
-  mural.classList.add('mural');
-  murales.forEach(m => m.classList.remove('activo'));
-  mural.classList.add('activo');
+// Mostrar mural actual
+function mostrarMural() {
+  const contenedor = document.getElementById('mural-container');
+  contenedor.innerHTML = '';
 
-  for (let i = 0; i < 6; i++) {
-    const marco = document.createElement('div');
-    marco.className = 'imagen-marco';
+  const mural = murales[muralActual];
 
-    const img = document.createElement('img');
-    img.src = 'https://via.placeholder.com/250x200?text=Imagen';
-    img.onclick = () => cambiarImagen(img);
-    img.oncontextmenu = e => {
-      e.preventDefault();
-      eliminarImagen(img);
+  mural.imagenes.forEach((imgObj, i) => {
+    const contenedorImagen = document.createElement('div');
+    contenedorImagen.className = 'imagen-contenedor';
+
+    const imagen = document.createElement('img');
+    imagen.src = imgObj.src || 'https://via.placeholder.com/150x150.png?text=+';
+    imagen.className = 'imagen-mural';
+    imagen.onclick = () => subirImagen(i);
+
+    const texto = document.createElement('input');
+    texto.type = 'text';
+    texto.value = imgObj.texto;
+    texto.placeholder = 'Escribe algo lindo...';
+    texto.className = 'texto-imagen';
+    texto.oninput = () => {
+      mural.imagenes[i].texto = texto.value;
+      guardarDatos();
     };
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Escribe un texto bonito...';
-    input.oninput = guardarDatos;
+    contenedorImagen.appendChild(imagen);
+    contenedorImagen.appendChild(texto);
+    contenedor.appendChild(contenedorImagen);
+  });
 
-    marco.appendChild(img);
-    marco.appendChild(input);
-    mural.appendChild(marco);
-  }
-
-  document.getElementById('galeria-container').appendChild(mural);
-  murales.push(mural);
-  mostrarMural(murales.length - 1);
-  guardarDatos();
+  guardarDatos(); // Guardar cada vez que se renderiza
 }
 
-function cambiarImagen(imgElemento) {
+// Subir imagen
+function subirImagen(index) {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
-  input.onchange = () => {
-    const archivo = input.files[0];
+
+  input.onchange = e => {
+    const archivo = e.target.files[0];
+    const lector = new FileReader();
+
+    lector.onload = () => {
+      murales[muralActual].imagenes[index].src = lector.result;
+      mostrarMural();
+    };
+
     if (archivo) {
-      const lector = new FileReader();
-      lector.onload = function (e) {
-        imgElemento.src = e.target.result;
-        guardarDatos();
-      };
       lector.readAsDataURL(archivo);
     }
   };
+
   input.click();
 }
 
-function eliminarImagen(imgElemento) {
-  imgElemento.src = 'https://via.placeholder.com/250x200?text=Imagen';
-  guardarDatos();
-}
-
-function mostrarMural(index) {
-  murales.forEach((m, i) => m.classList.toggle('activo', i === index));
-  muralActual = index;
-}
-
-function siguienteMural() {
-  if (murales.length === 0) return;
-  const siguiente = (muralActual + 1) % murales.length;
-  mostrarMural(siguiente);
-}
-
-function anteriorMural() {
-  if (murales.length === 0) return;
-  const anterior = (muralActual - 1 + murales.length) % murales.length;
-  mostrarMural(anterior);
-}
-
-function eliminarMural() {
-  if (murales.length === 0) return;
-  const mural = murales[muralActual];
-  mural.remove();
-  murales.splice(muralActual, 1);
-  guardarDatos();
-  if (murales.length > 0) {
-    mostrarMural(muralActual % murales.length);
-  } else {
-    muralActual = 0;
-    crearMural();
-  }
-}
-
-window.onload = () => {
-  cargarDatos();
+// Crear nuevo mural
+document.getElementById('btnNuevo').onclick = () => {
+  murales.push(crearMuralVacio());
+  muralActual = murales.length - 1;
+  mostrarMural();
 };
+
+// Eliminar mural
+document.getElementById('btnEliminar').onclick = () => {
+  if (murales.length > 1) {
+    murales.splice(muralActual, 1);
+    muralActual = Math.max(0, muralActual - 1);
+    mostrarMural();
+  } else {
+    alert("Debe haber al menos un mural.");
+  }
+};
+
+// Navegar
+document.getElementById('btnAnterior').onclick = () => {
+  if (muralActual > 0) {
+    muralActual--;
+    mostrarMural();
+  }
+};
+
+document.getElementById('btnSiguiente').onclick = () => {
+  if (muralActual < murales.length - 1) {
+    muralActual++;
+    mostrarMural();
+  }
+};
+
 
 function generarConfetti() {
   const colores = ['#f8b1d5', '#ffedf7', '#ffe0f0', '#ffd6f5', '#fbc4e4'];
@@ -156,6 +136,7 @@ function generarConfetti() {
   }
 }
 
+// Inicialización
 window.onload = () => {
   cargarDatos();
   generarConfetti();
