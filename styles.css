@@ -1,155 +1,134 @@
+/* Fondo general */
 body {
+  background: linear-gradient(to bottom, #ffe6f0, #ffd9ec);
   font-family: 'Comic Sans MS', cursive;
-  background: linear-gradient(to bottom right, #ffd6f5, #ffe6fb);
   color: #ff69b4;
   text-align: center;
-  padding: 0px;
   margin: 0;
+  padding: 0;
   overflow-x: hidden;
   position: relative;
-
 }
 
-
-h1 {
-  font-size: 3rem;
-  text-shadow: 2px 2px #fff0f5;
-  margin-bottom: 20px;
+/* Título principal */
+.titulo-principal {
+  font-size: 48px;
+  margin: 30px 0 10px;
+  text-shadow: 2px 2px #fff;
+  color: #ff69b4;
 }
 
-.menu {
-  margin-bottom: 10px;
-}
-
-.menu button {
-  background-color: #ffb6c1;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 15px;
-  font-size: 1rem;
-  margin: 5px;
-  cursor: pointer;
-  box-shadow: 0 0 10px #ffccf9;
-  transition: transform 0.2s;
-}
-
-.menu button:hover {
-  transform: scale(1.1);
-}
-
-#galeria-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin: 20px auto;
-  max-width: 1000px;
-}
-
-.mural {
-  display: none;
-  width: 100%;
-}
-
-.mural.activo {
+/* Mural: contenedor de imágenes */
+.mural-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 25px;
+  padding: 30px;
+  z-index: 2;
+  position: relative;
 }
 
-.imagen-marco {
-  border: 5px solid #ffc0cb;
+/* Imagen + texto */
+.imagen-contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Imagen enmarcada estilo kawaii */
+.imagen-mural {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 6px solid #ffb6d9;
   border-radius: 20px;
-  background: #fff0f5;
-  padding: 10px;
-  width: 250px;
-  box-shadow: 0 0 10px #ffccf9;
-}
-
-.imagen-marco img {
-  width: 100%;
-  border-radius: 10px;
+  box-shadow: 0 0 15px #ffa8d8;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-.imagen-marco input {
-  border: none;
-  background: transparent;
+.imagen-mural:hover {
+  transform: scale(1.05);
+}
+
+/* Texto editable */
+.texto-imagen {
+  margin-top: 8px;
+  width: 160px;
+  font-family: 'Comic Sans MS', cursive;
   text-align: center;
-  margin-top: 5px;
-  color: #d63384;
-  font-size: 1rem;
+  font-size: 16px;
+  color: #d94caa;
+  border: 2px solid #ffc9e1;
+  background-color: #fff0f8;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 0 5px #fdd1ec;
+  outline: none;
 }
 
-.navegacion button {
-  background-color: #ffb6c1;
+/* Botones de control */
+.controles {
+  margin: 20px auto 50px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  z-index: 3;
+  position: relative;
+}
+
+/* Botones rosaditos */
+button {
+  background-color: #ffc2e0;
   border: none;
-  border-radius: 15px;
   padding: 10px 20px;
-  font-size: 1rem;
-  margin: 10px;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 16px;
+  color: #fff;
+  border-radius: 15px;
   cursor: pointer;
-  box-shadow: 0 0 10px #ffccf9;
+  box-shadow: 0 4px #ff90bb;
+  transition: background-color 0.3s;
 }
 
-.navegacion button:hover {
-  transform: scale(1.1);
+button:hover {
+  background-color: #ff90bb;
 }
 
-/* Posición de decoraciones laterales */
+/* Imágenes decorativas */
 .decoracion {
   position: absolute;
   top: 10%;
   width: 280px;
-  max-width: 30%;
   opacity: 0.95;
-  z-index: 2;
-  filter: drop-shadow(0 0 10px #ffbde8);
+  z-index: 1;
+  filter: drop-shadow(0 0 15px #f8b1d8);
   transition: transform 0.3s ease-in-out;
 }
 
 .decoracion:hover {
   transform: scale(1.05);
 }
-.decoracion.izquierda {
-  left: 20px;
+
+.decoracion-izquierda {
+  left: 0;
 }
 
-.decoracion.derecha {
-  right: 20px;
-  transform: scaleX(-1); /* Voltearla para simetría */
+.decoracion-derecha {
+  right: 0;
 }
 
-/* Confetti estilo kawaii */
-.confetti-container {
+/* Canvas de confeti */
+#confetti-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  pointer-events: none;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: caer 5s linear infinite;
-}
-
-@keyframes caer {
-  0% {
-    transform: translateY(-10px) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0;
-  }
+  pointer-events: none;
+  z-index: 0;
 }
 
 input[type="text"] {
